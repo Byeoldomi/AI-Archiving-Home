@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 보관소</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Configuration for Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#0a0a0a', /* Slightly darker for main content area to match image */
+                        sidebar: '#0a0a0a', /* Darkest background */
+                        card: '#121212', /* Slightly lighter for cards */
+                        border: '#27272a', /* Subtle borders */
+                        accent: '#c084fc', /* Light purple text */
+                        accentDark: '#9333ea', /* Darker purple for buttons */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+        }
+
+        /* Custom Scrollbar for a premium feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b;
+        }
+    </style>
+</head>
+
+<body class="flex h-screen overflow-hidden antialiased text-white bg-background">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-sidebar border-r border-border flex flex-col justify-between shrink-0">
+        <div>
+            <!-- Logo -->
+            <div class="h-20 flex items-center px-6">
+                <h1 class="text-2xl font-bold text-accent tracking-tight">AI 보관소</h1>
+            </div>
+
+            <!-- User Profile -->
+            <div class="px-6 mb-8 mt-2 flex items-center gap-3">
+                <div
+                    class="w-10 h-10 rounded-full bg-[#1a1a1a] border border-border flex items-center justify-center shrink-0">
+                    <i data-lucide="user" class="w-5 h-5 text-gray-400"></i>
+                </div>
+                <div>
+                    <div class="font-semibold text-sm">사용자 프로필</div>
+                    <div class="text-xs text-gray-400">프로</div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="space-y-1 px-3">
+                <a href="#"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-[#1a1a1a] text-white border-l-2 border-accent">
+                    <i data-lucide="archive" class="w-5 h-5 text-accent"></i>
+                    <span class="font-medium">보관소</span>
+                </a>
+                <a href="#"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors border-l-2 border-transparent">
+                    <i data-lucide="compass" class="w-5 h-5"></i>
+                    <span class="font-medium">둘러보기</span>
+                </a>
+                <a href="#"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors border-l-2 border-transparent">
+                    <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                    <span class="font-medium">카테고리</span>
+                </a>
+                <a href="#"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors border-l-2 border-transparent">
+                    <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                    <span class="font-medium">데이터 분석</span>
+                </a>
+                <a href="#"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors border-l-2 border-transparent">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    <span class="font-medium">설정</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Upgrade Button -->
+        <div class="p-6">
+            <button
+                class="w-full py-2.5 rounded-lg border border-border text-gray-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium">
+                프리미엄으로 업그레이드
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 bg-[#0f0f11]"> <!-- Slightly lighter bg than sidebar -->
+        <!-- Top Header -->
+        <header class="h-20 border-b border-border flex items-center justify-between px-8 shrink-0 bg-[#0a0a0a]">
+            <!-- Search -->
+            <div class="relative w-96">
+                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                <input type="text" id="search-input" placeholder="보관소에서 검색..."
+                    class="w-full bg-[#121212] border border-border rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all text-white placeholder-gray-500">
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center gap-6">
+                <button class="text-gray-400 hover:text-white transition-colors">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                </button>
+                <button class="text-gray-400 hover:text-white transition-colors">
+                    <i data-lucide="user-circle" class="w-5 h-5"></i>
+                </button>
+                <button id="add-link-btn"
+                    class="bg-accentDark hover:bg-accent transition-colors text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-lg shadow-purple-900/50">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    새 링크 추가
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Area -->
+        <main class="flex-1 overflow-y-auto p-8">
+
+            <!-- Filters -->
+            <div id="filter-container" class="flex flex-wrap gap-3 mb-8">
+                <button data-filter="all"
+                    class="px-5 py-2 rounded-full border border-accent text-accent text-sm font-medium bg-accent/10 transition-colors">전체</button>
+                <button data-filter="프롬프트"
+                    class="px-5 py-2 rounded-full border border-border text-gray-400 hover:text-white hover:border-gray-500 transition-colors text-sm bg-[#121212]">#프롬프트</button>
+                <button data-filter="AI 도구"
+                    class="px-5 py-2 rounded-full border border-border text-gray-400 hover:text-white hover:border-gray-500 transition-colors text-sm bg-[#121212]">#AI도구</button>
+                <button data-filter="코딩"
+                    class="px-5 py-2 rounded-full border border-border text-gray-400 hover:text-white hover:border-gray-500 transition-colors text-sm bg-[#121212]">#코딩</button>
+                <button data-filter="디자인"
+                    class="px-5 py-2 rounded-full border border-border text-gray-400 hover:text-white hover:border-gray-500 transition-colors text-sm bg-[#121212]">#디자인</button>
+                <button data-filter="연구·분석"
+                    class="px-5 py-2 rounded-full border border-border text-gray-400 hover:text-white hover:border-gray-500 transition-colors text-sm bg-[#121212]">#연구·분석</button>
+            </div>
+
+            <!-- Grid -->
+            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- JavaScript가 여기에 카드를 렌더링합니다 -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Card Creation Modal -->
+    <div id="card-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm hidden transition-all duration-300 opacity-0">
+        <div class="bg-[#121212] border border-border w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden transform scale-95 transition-all duration-300">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-border">
+                <h3 class="text-lg font-semibold text-white">새로운 카드 추가</h3>
+                <button id="close-modal-btn" type="button" class="text-gray-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <!-- Modal Body / Form -->
+            <form id="card-form" class="p-6 space-y-4">
+                <!-- Title Field -->
+                <div>
+                    <label for="modal-title" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">제목 *</label>
+                    <input type="text" id="modal-title" required placeholder="예: GPT-4o 활용 프롬프트 팁"
+                        class="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all text-white placeholder-gray-600">
+                </div>
+                <!-- URL Field -->
+                <div>
+                    <label for="modal-url" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">URL *</label>
+                    <input type="url" id="modal-url" required placeholder="https://example.com"
+                        class="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all text-white placeholder-gray-600">
+                </div>
+                <!-- Description Field -->
+                <div>
+                    <label for="modal-desc" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">설명</label>
+                    <textarea id="modal-desc" rows="3" placeholder="카드를 설명하는 간단한 내용을 입력하세요..."
+                        class="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all text-white placeholder-gray-600 resize-none"></textarea>
+                </div>
+                <!-- Tags Field (Multi-input) -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">태그 (Enter 또는 쉼표로 추가)</label>
+                    <!-- Tag Input Wrapper -->
+                    <div id="tag-input-container" class="flex flex-wrap items-center gap-2 w-full bg-[#0a0a0a] border border-border rounded-lg px-3 py-2.5 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all min-h-[44px]">
+                        <!-- Existing tag chips will render here -->
+                        <input type="text" id="modal-tag-input" placeholder="태그 입력 후 Enter..."
+                            class="flex-1 bg-transparent border-none outline-none text-sm text-white placeholder-gray-600 min-w-[120px]">
+                    </div>
+                </div>
+                <!-- Footer Action Buttons -->
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-border">
+                    <button type="button" id="cancel-modal-btn"
+                        class="px-4 py-2 rounded-lg text-sm font-medium border border-border text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                        취소
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 rounded-lg text-sm font-medium bg-accentDark hover:bg-accent text-white shadow-lg shadow-purple-900/50 transition-colors">
+                        추가하기
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 초기 카드 데이터 (다중 태그를 포함하도록 tags 배열로 구성)
+        const initialCards = [
+            {
+                tags: ["코딩"],
+                title: "Cursor AI 에디터 활용 꿀팁",
+                description: "생산성을 극대화하는 고급 설정 스니펫 및 워크플로우 가이드...",
+                url: "https://cursor.sh",
+                date: "2일 전 추가됨"
+            },
+            {
+                tags: ["AI 도구"],
+                title: "Midjourney v6 치트 시트",
+                description: "새로 도입된 매개변수 및 프롬프트 작성법 완벽 가이드...",
+                url: "https://midjourney.com",
+                date: "5일 전 추가됨"
+            },
+            {
+                tags: ["연구·분석"],
+                title: "2024년 AI 트렌드 현황 보고서",
+                description: "글로벌 인공지능 산업 동향 및 핵심 기술 트렌드 연례 분석...",
+                url: "https://example.com/report",
+                date: "1주일 전 추가됨"
+            },
+            {
+                tags: ["디자인"],
+                title: "글래스모피즘 UI 디자인 패턴",
+                description: "피그마 컴포넌트 모음 및 Tailwind CSS 스타일링 실무 팁...",
+                url: "https://figma.com",
+                date: "2주일 전 추가됨"
+            }
+        ];
+
+        // 상태 관리
+        let cards = [...initialCards];
+        let modalTags = [];
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // DOM Elements
+        const cardModal = document.getElementById('card-modal');
+        const addLinkBtn = document.getElementById('add-link-btn');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const cancelModalBtn = document.getElementById('cancel-modal-btn');
+        const cardForm = document.getElementById('card-form');
+        const tagInputContainer = document.getElementById('tag-input-container');
+        const modalTagInput = document.getElementById('modal-tag-input');
+
+        // 카드 렌더링 함수
+        function renderCards() {
+            const grid = document.getElementById('card-grid');
+            if (!grid) return;
+
+            // 필터링 적용 (카테고리 필터 & 검색 텍스트)
+            const filteredCards = cards.filter(card => {
+                const matchesFilter = currentFilter === 'all' || card.tags.includes(currentFilter);
+                
+                const query = searchQuery.toLowerCase();
+                const matchesSearch = !query || 
+                    card.title.toLowerCase().includes(query) || 
+                    (card.description && card.description.toLowerCase().includes(query)) ||
+                    card.tags.some(tag => tag.toLowerCase().includes(query));
+
+                return matchesFilter && matchesSearch;
+            });
+
+            // 결과가 없는 경우 처리
+            if (filteredCards.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
+                        <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 border border-border">
+                            <i data-lucide="folder-open" class="w-8 h-8 text-gray-500"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-300">검색 또는 필터 결과가 없습니다</h4>
+                        <p class="text-sm text-gray-500 mt-1">다른 키워드로 검색하거나 새 카드를 추가해 보세요.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            grid.innerHTML = filteredCards.map(card => {
+                // 태그 칩 렌더링
+                const tagChips = card.tags.map(tag => `
+                    <span class="inline-block px-2.5 py-1 rounded-md bg-[#1a1a1a] border border-border text-xs font-semibold text-accent tracking-wider uppercase">
+                        ${tag}
+                    </span>
+                `).join('');
+
+                return `
+                    <div onclick="window.open('${card.url}', '_blank')"
+                        class="bg-card border border-border rounded-2xl p-5 hover:border-gray-600 transition-colors group cursor-pointer flex flex-col justify-between h-64 relative">
+                        <button onclick="event.stopPropagation(); deleteCard('${card.url}')" 
+                            class="absolute top-4 right-4 p-2 rounded-lg bg-black/40 text-gray-400 hover:text-red-400 hover:bg-black/80 transition-all opacity-0 group-hover:opacity-100 z-10"
+                            title="삭제">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                        <div>
+                            <div class="flex flex-wrap gap-1.5 mb-4 pr-8">
+                                ${tagChips}
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2 line-clamp-2">${card.title}</h3>
+                            <p class="text-sm text-gray-400 line-clamp-2">${card.description || '설명이 없습니다.'}</p>
+                        </div>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-xs text-gray-500">${card.date}</span>
+                            <div
+                                class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 group-hover:text-white transition-colors">
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // 아이콘 리로드
+            lucide.createIcons();
+        }
+
+        // 모달 열기 함수 (애니메이션 효과 적용)
+        function openModal() {
+            cardModal.classList.remove('hidden');
+            setTimeout(() => {
+                cardModal.classList.remove('opacity-0');
+                cardModal.querySelector('div').classList.remove('scale-95');
+                cardModal.querySelector('div').classList.add('scale-100');
+            }, 10);
+        }
+
+        // 모달 닫기 함수
+        function closeModal() {
+            cardModal.classList.add('opacity-0');
+            cardModal.querySelector('div').classList.remove('scale-100');
+            cardModal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                cardModal.classList.add('hidden');
+                resetForm();
+            }, 300);
+        }
+
+        // 폼 초기화
+        function resetForm() {
+            cardForm.reset();
+            modalTags = [];
+            renderTagChips();
+        }
+
+        // 태그 칩 렌더링 함수
+        function renderTagChips() {
+            // 기존 칩 요소들을 삭제
+            const existingChips = tagInputContainer.querySelectorAll('.tag-chip');
+            existingChips.forEach(chip => chip.remove());
+
+            // 새로 태그 리스트를 돌며 칩 생성
+            modalTags.forEach((tag, index) => {
+                const chip = document.createElement('span');
+                chip.className = 'tag-chip inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#1a1a1a] border border-border text-xs font-semibold text-accent';
+                chip.innerHTML = `
+                    <span>#${tag}</span>
+                    <button type="button" onclick="removeModalTag(${index})" class="text-accent hover:text-white focus:outline-none transition-colors">
+                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                    </button>
+                `;
+                // 인풋 상자 바로 앞에 삽입
+                tagInputContainer.insertBefore(chip, modalTagInput);
+            });
+
+            // 내부 x 아이콘 렌더링
+            lucide.createIcons();
+        }
+
+        // 태그 삭제 (전역 바인딩)
+        window.removeModalTag = function(index) {
+            modalTags.splice(index, 1);
+            renderTagChips();
+        };
+
+        // 카드 삭제 함수 (전역 바인딩)
+        window.deleteCard = function(url) {
+            if (confirm('정말 이 카드를 삭제하시겠습니까?')) {
+                cards = cards.filter(card => card.url !== url);
+                renderCards();
+            }
+        };
+
+        // Event Listeners
+        addLinkBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelModalBtn.addEventListener('click', closeModal);
+
+        cardModal.addEventListener('click', (e) => {
+            if (e.target === cardModal) {
+                closeModal();
+            }
+        });
+
+        // 태그 입력 핸들러 (Enter 또는 , 입력 시 칩 등록)
+        modalTagInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const tagValue = modalTagInput.value.trim().replace(/,/g, '');
+                
+                if (tagValue && !modalTags.includes(tagValue)) {
+                    modalTags.push(tagValue);
+                    modalTagInput.value = '';
+                    renderTagChips();
+                }
+            }
+        });
+
+        // 카드 폼 전송 핸들러
+        cardForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('modal-title').value.trim();
+            const url = document.getElementById('modal-url').value.trim();
+            const description = document.getElementById('modal-desc').value.trim();
+            
+            // URL 형식 체크 (http:// 또는 https:// 로 시작)
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('URL은 반드시 http:// 또는 https:// 로 시작해야 합니다.');
+                return;
+            }
+
+            // 중복 URL 체크
+            const isDuplicate = cards.some(card => card.url === url);
+            if (isDuplicate) {
+                alert('이미 등록된 URL입니다. 다른 링크를 추가해주세요.');
+                return;
+            }
+
+            // 입력된 태그가 없을 경우 기본 태그 적용
+            const finalTags = modalTags.length > 0 ? [...modalTags] : ["일반"];
+
+            const newCard = {
+                tags: finalTags,
+                title: title,
+                description: description,
+                url: url,
+                date: "방금 전 추가됨"
+            };
+
+            cards.unshift(newCard);
+            renderCards();
+            closeModal();
+        });
+
+        // 검색 입력 이벤트
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.trim();
+                renderCards();
+            });
+        }
+
+        // 필터 변경 이벤트
+        const filterContainer = document.getElementById('filter-container');
+        if (filterContainer) {
+            const filterButtons = filterContainer.querySelectorAll('button');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => {
+                        btn.className = "px-5 py-2 rounded-full border border-border text-gray-400 hover:text-white hover:border-gray-500 transition-colors text-sm bg-[#121212]";
+                    });
+                    button.className = "px-5 py-2 rounded-full border border-accent text-accent text-sm font-medium bg-accent/10 transition-colors";
+                    currentFilter = button.getAttribute('data-filter');
+                    renderCards();
+                });
+            });
+        }
+
+        // 초기 실행
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCards();
+        });
+    </script>
+</body>
+
+</html>
